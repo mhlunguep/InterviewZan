@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Table</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #F8F9F8;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even), tr:nth-child(even) a{
+  background-color: #F8F9F8;
+  color: #000000;
+}
+
+tr:nth-child(odd), tr:nth-child(odd) a{
+background: #5A595A;
+color: white;
+
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Student Table</h2>
+
+    <table id=studentTable>    
+        <tr>
+            <th>Roll No.</th>
+            <th>Studet Name</th>
+            <th>Subject Name</th>
+            <th>Action</th>
+            <th>Values</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>John Soap</td>
+            <td>Physics</td>
+            <td><a href="#" class="edit">Edit</a></td>
+            <td><a href="#" class="delete">Delete</a></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Shawn Green</td>
+            <td>Maths</td>
+            <td><a href="#" class="edit">Edit</a></td>
+            <td><a href="#" class="delete">Delete</a></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Michelle Wells</td>
+            <td>Chemistry</td>
+            <td><a href="#" class="edit">Edit</a></td>
+            <td><a href="#" class="delete">Delete</a></td>
+        </tr>
+            
+    </table>
+    <div class="modal" id="ConfirmModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-warning" style="font-size:30px;"></i><h5 class="modal-title">Confirm Deleting!</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <label>Type &quot;yes&quot; to confirm</label>
+                <input type="text" id="inputResponse" required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" onclick="confirmFunction()" class="btn btn-danger">Okay</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+<script>
+ 
+//Edit anchor tag
+$("#studentTable").on('click','.edit',function(){
+         // get the current row
+         var currentRow=$(this).closest("tr");  
+         //var rollNo=currentRow.find("td:eq(0)").text(); // get current Roll No. 
+         var studetName=currentRow.find("td:eq(1)").text(); // get current Studet Name
+         //var subjectName=currentRow.find("td:eq(2)").text(); // get current Subject Name
+   
+         $.alert({
+            icon: 'fa fa-edit',
+            title: 'Edit',
+            content: "You are editing "+studetName,
+        });
+});
+
+var currentRow;
+//Delete anchor tag
+$("#studentTable").on('click','.delete',function(){
+ currentRow=$(this).closest("tr");   
+         var studetName=currentRow.find("td:eq(1)").text(); // get current Studet Name
+                    
+    $.confirm({
+        icon: 'fa fa-warning',
+        title: 'Delete',
+        content: 'Do you really want to delete ' +studetName+'?',
+        buttons: {
+            formSubmit: {
+                text: 'Yes',
+                btnClass: 'btn-danger',
+                action: function () {
+                    $('#ConfirmModal').modal('toggle');
+                   
+                        $('#ConfirmModal').modal('show');       
+                }   
+            },
+            No: function () {
+                //close
+            },
+        },
+
+        onContentReady: function () {
+            // bind to events                   
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();         
+                jc.$$formSubmit.trigger('click'); // reference the button and click it          
+            });            
+        } 
+    }); 
+}); 
+function confirmFunction() {
+    if ( (document.getElementById("inputResponse").value).toLowerCase()== 'yes'){
+        currentRow.remove();  
+         $('#ConfirmModal').modal('hide');      
+    }
+}                   
+</script>
+</body>
+</html>
